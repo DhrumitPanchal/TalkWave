@@ -11,7 +11,7 @@ function Register() {
     ConPassword: "",
   });
   const [proImg, setProImg] = useState(null);
-  const hendleInput = (e) => {
+  const handleInput = (e) => {
     if (e.target.name == "File") {
       const file = e.target.files[0];
       setProImg(file);
@@ -42,10 +42,10 @@ function Register() {
             <input
               name="UserName"
               type="text"
-              onChange={(e) => hendleInput(e)}
+              onChange={(e) => handleInput(e)}
               value={userData.UserName}
               className=" py-[.6rem] bg-transparent placeholder:text-blue-900/70"
-              placeholder="enter you full name"
+              placeholder="Name"
             />
           </div>
 
@@ -54,10 +54,10 @@ function Register() {
             <input
               name="Email"
               type="email"
-              onChange={(e) => hendleInput(e)}
+              onChange={(e) => handleInput(e)}
               value={userData.Email}
               className="py-[.6rem] bg-transparent placeholder:text-blue-900/70"
-              placeholder="enter email"
+              placeholder="Email"
             />
           </div>
 
@@ -66,10 +66,10 @@ function Register() {
             <input
               name="Password"
               type="text"
-              onChange={(e) => hendleInput(e)}
+              onChange={(e) => handleInput(e)}
               value={userData.Password}
               className="py-[.6rem] bg-transparent placeholder:text-blue-900/70"
-              placeholder="enter password"
+              placeholder="Password"
             />
           </div>
 
@@ -79,7 +79,7 @@ function Register() {
               name="File"
               type="file"
               accept="image/*"
-              onChange={hendleInput}
+              onChange={handleInput}
               className="py-[.6rem] bg-transparent placeholder:text-blue-900/70"
             />
           </div>
@@ -88,10 +88,10 @@ function Register() {
           <input
             name="File"
             type="file"
-            onChange={(e) => hendleInput(e)}
+            onChange={(e) => handleInput(e)}
             value={userData.File}
             className="py-[.6rem] bg-transparent placeholder:text-blue-900/70"
-            placeholder="enter password"
+            placeholder="password"
           />
         </div> */}
 

@@ -13,9 +13,7 @@ function Login() {
   const handleInput = (e) => {
     setUserData({ ...userData, [e.target.name]: [e.target.value] });
   };
-  // const FormSubmit = (e) => {
-  // SingIn(...userData.Email, ...userData.Password);
-  // };
+
   return (
     <div className="max-sm:pt-[6rem] flex justify-center items-center max-sm:flex-col gap-[2rem] h-screen max-sm:h-full  w-full text-blue-900">
       <img
@@ -41,7 +39,7 @@ function Login() {
               onChange={(e) => handleInput(e)}
               value={userData.Email}
               className="py-[.6rem] bg-transparent placeholder:text-blue-900/70"
-              placeholder="enter email"
+              placeholder="Email"
             />
           </div>
 
@@ -53,12 +51,12 @@ function Login() {
               onChange={(e) => handleInput(e)}
               value={userData.Password}
               className="py-[.6rem] bg-transparent placeholder:text-blue-900/70"
-              placeholder="enter password"
+              placeholder="Password"
             />
           </div>
 
           <button className=" px-[1rem] py-[.6rem] rounded-[1.4rem] text-[1rem] font-semibold text-white bg-gradient-to-b from-blue-500 to-blue-700 hover:from-blue-700 hover:to-blue-700 transition-all duration-1000">
-            Sign up
+            Login
           </button>
 
           <div>
