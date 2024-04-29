@@ -1,23 +1,20 @@
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { FaArrowLeft } from "react-icons/fa";
-import { SlUser } from "react-icons/sl";
-import { SlSettings } from "react-icons/sl";
-import { CiBellOn } from "react-icons/ci";
+import { useContext, useState } from "react";
+// import { FaArrowLeft } from "react-icons/fa";
+// import { SlUser } from "react-icons/sl";
+// import { SlSettings } from "react-icons/sl";
+// import { CiBellOn } from "react-icons/ci";
 import { RxExit } from "react-icons/rx";
-import { useSelector, useDispatch } from "react-redux";
-import { updateUser } from "../Redux/Slices/User";
+import { Context } from "../Context/Context";
 function Profile() {
   const [proEditable, setProEditable] = useState(false);
-  const user = useSelector((state) => state.user);
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const { user, setUser, updateUserDetails } = useContext(Context);
+  // const navigate = useNavigate();
 
   const handelInput = (event) => {
     if (proEditable) {
       const name = event.target.name;
       const value = event.target.value;
-      dispatch(updateUser({ [name]: value }));
+      setUser({ ...user, [name]: value });
     }
   };
   return (
@@ -49,7 +46,10 @@ function Profile() {
         <div className="relative py-[5rem] px-[6rem] flex flex-col gap-[4rem] h-[calc(100vh-4rem)]  w-full ">
           {proEditable && (
             <div
-              onClick={() => setProEditable(!proEditable)}
+              onClick={() => {
+                setProEditable(!proEditable);
+                updateUserDetails();
+              }}
               className="cursor-pointer absolute flex justify-center items-center rounded-[.2rem] top-[2rem] right-[8rem] h-[2rem] w-[5rem] text-[1.1rem] font-semibold text-white bg-blue-500"
             >
               Save

@@ -1,4 +1,6 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { Context } from "../Context/Context";
 import {
   FaArrowLeft,
   FaUserPlus,
@@ -10,7 +12,7 @@ import {
 
 function Chat() {
   const navigate = useNavigate();
-
+  const { user } = useContext(Context);
   return (
     <div className="chatBox h-screen w-[76%] max-sm:w-full">
       <div className="h-[11%] flex justify-between items-center px-[2rem] max-sm:px-[1rem] max-sm:h-[8%] bg-white ">
@@ -28,7 +30,7 @@ function Chat() {
               alt=""
             />
             <div>
-              <h1 className="text-[1.2rem] font-semibold">Dhrumit</h1>
+              <h1 className="text-[1.2rem] font-semibold">{user?.name}</h1>
               <p>Lorem ipsum dolor sit amet.</p>
             </div>
           </div>
