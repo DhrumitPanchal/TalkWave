@@ -6,7 +6,7 @@ const { default: mongoose } = require("mongoose");
 async function handelGetAllUsers(req, res) {
   try {
     const users = await User.find();
-    return res.status(200).json(users);
+    return res.status(200).json({ msg: "user get successfully ", users });
   } catch (error) {
     res
       .status(500)

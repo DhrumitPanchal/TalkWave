@@ -69,11 +69,13 @@ async function handelGetMessages(req, res) {
     });
 
     if (!conversation) {
-      return res.status(403).json({ msg: "not have any message", message: [] });
+      return res
+        .status(200)
+        .json({ msg: "not have any message", messages: [] });
     }
 
     const messages = conversation.messages;
-    return res.status(200).json(messages);
+    return res.status(200).json({ msg: "get message successfully", messages });
   } catch (error) {
     res
       .status(500)

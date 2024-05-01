@@ -5,6 +5,6 @@ const {
 } = require("../controllers/Message");
 const Router = express.Router();
 Router.post("/send/:receiverId", handelSendMessage);
-Router.get("/get/:receiverId", handelGetMessages);
+Router.post("/get/:receiverId", handelGetMessages);
 
 module.exports = Router;

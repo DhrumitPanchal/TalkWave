@@ -13,6 +13,8 @@ function MyContext(props) {
     profilePic: "",
   });
   const [proImg, setProImg] = useState(null);
+  const [allUsers, setAllUsers] = useState([]);
+  const [messages, setMessages] = useState([]);
   const navigate = useNavigate();
 
   const handleRegister = async ({ name, email, password }) => {
@@ -80,6 +82,7 @@ function MyContext(props) {
           email: result?.email,
           profilePic: result?.profilePic,
         });
+        navigate("/");
       } else {
         navigate("/login");
       }
@@ -124,20 +127,88 @@ function MyContext(props) {
     }
   };
 
+  const handleGetAllUsers = async () => {
+    try {
+      const { data } = await axios.get("http://localhost:8000/auth/users");
+      const filterUser = data?.users.filter(
+        (current) => current._id !== user._id
+      );
+      setAllUsers(filterUser);
+    } catch ({ response }) {
+      console.log(response.data);
+      toast.warn(response.data.msg, {
+        position: "top-center",
+        theme: "colored",
+      });
+    }
+  };
+
+  const handelGetMessages = async (receiverId) => {
+    if (!receiverId || !user?._id) return;
+    try {
+      const { data } = await axios.post(
+        `http://localhost:8000/message/get/${receiverId}`,
+        {
+          senderId: user._id,
+          receiverId,
+        }
+      );
+
+      setMessages(data?.messages);
+    } catch ({ response }) {
+      console.log(response.data);
+      toast.warn(response.data.msg, {
+        position: "top-center",
+        theme: "colored",
+      });
+    }
+  };
+
+  const handelSendMessage = async (receiverId, message) => {
+    try {
+      const { data } = await axios.post(
+        `http://localhost:8000/message/send/${receiverId}`,
+        {
+          senderId: user._id,
+          message,
+        }
+      );
+
+      setMessages([...messages, data.newMessage]);
+    } catch ({ response }) {
+      console.log(response.data);
+      toast.warn(response.data.msg, {
+        position: "top-center",
+        theme: "colored",
+      });
+    }
+  };
+
   useEffect(() => {
     handelJwtLogin();
+    handleGetAllUsers();
   }, []);
+  useEffect(() => {
+    handleGetAllUsers();
+  }, [user]);
   return (
     <Context.Provider
       value={{
         user,
         setUser,
+        allUsers,
+        setAllUsers,
         proImg,
+        messages,
+        setMessages,
         setProImg,
         handleRegister,
         handleLogin,
         handelJwtLogin,
         updateUserDetails,
+        handleGetAllUsers,
+        handelGetMessages,
+        handelSendMessage,
       }}
     >
       {props.children}
