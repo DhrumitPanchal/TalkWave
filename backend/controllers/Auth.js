@@ -2,17 +2,29 @@ const User = require("../models/userModel");
 const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { default: mongoose } = require("mongoose");
+
+async function handelGetAllUsers(req, res) {
+  try {
+    const users = await User.find();
+    return res.status(200).json(users);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ msg: "internal server error", error: error.message });
+  }
+}
+
 async function handelUserRegistration(req, res) {
   const { name, email, password } = req.body;
 
   if (!name || !email || !password) {
-    return res.status(403).json({ meg: "all details are required" });
+    return res.status(403).json({ msg: "all details are required" });
   }
 
   if (password.length < 6) {
     return res
       .status(403)
-      .json({ meg: "password length is at least six character" });
+      .json({ msg: "password length is at least six character" });
   }
 
   try {
@@ -41,13 +53,13 @@ async function handelUserRegistration(req, res) {
 
 async function handelUserLogin(req, res) {
   const { email, password } = req.body;
-
+  console.log(email, password);
   if (!email || !password) {
-    return res.status(403).json({ meg: "all details are required" });
+    return res.status(403).json({ msg: "all details are required" });
   }
 
   try {
-    const user = await User.findOne({ email: email });
+    const user = await User.findOne({ email });
 
     if (!user) {
       return res.status(404).json({ msg: "invalid credential" });
@@ -56,10 +68,11 @@ async function handelUserLogin(req, res) {
     const checkPassword = await bcryptjs.compare(password, user.password);
 
     if (!checkPassword) {
-      return res.status(403).json({ meg: "invalid credential" });
+      return res.status(403).json({ msg: "invalid credential" });
     }
     const payload = { ...user };
     const access_Token = await jwt.sign(payload, process.env.JWT_SECRETE);
+
     return res
       .status(200)
       .json({ msg: "login successfully", user, access_Token });
@@ -96,15 +109,15 @@ async function handelUserUpdate(req, res) {
   const { id, data } = req.body;
 
   if (!id) {
-    return res.status(403).json({ meg: "user id undefine" });
+    return res.status(403).json({ msg: "user id undefine" });
   }
   if (!data) {
-    return res.status(403).json({ meg: "user details is undefine" });
+    return res.status(403).json({ msg: "user details is undefine" });
   }
 
   const isValidObjectId = await mongoose.isValidObjectId(id);
   if (!isValidObjectId) {
-    return res.status(403).json({ meg: "invalid user id" });
+    return res.status(403).json({ msg: "invalid user id" });
   }
 
   try {
@@ -114,7 +127,7 @@ async function handelUserUpdate(req, res) {
       return res.status(404).json({ msg: "user not found" });
     }
 
-    const updatedUser = await User.findByIdAndUpdate(id, data);
+    const updatedUser = await User.findByIdAndUpdate(id, data, { new: true });
 
     return res
       .status(200)
@@ -127,6 +140,7 @@ async function handelUserUpdate(req, res) {
 }
 
 module.exports = {
+  handelGetAllUsers,
   handelUserRegistration,
   handelUserLogin,
   handelUserUpdate,

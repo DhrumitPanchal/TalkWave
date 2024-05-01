@@ -4,8 +4,10 @@ const {
   handelUserLogin,
   handelUserUpdate,
   handelJwtTokenBasedLogin,
+  handelGetAllUsers,
 } = require("../controllers/Auth");
 const Router = express.Router();
+Router.get("/users", handelGetAllUsers);
 Router.post("/register", handelUserRegistration);
 Router.post("/login", handelUserLogin);
 Router.post("/jwt", handelJwtTokenBasedLogin);
