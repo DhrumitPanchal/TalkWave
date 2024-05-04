@@ -13,8 +13,11 @@ function MyContext(props) {
     profilePic: "",
   });
   const [proImg, setProImg] = useState(null);
+  const [friends, setFriends] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
   const [messages, setMessages] = useState([]);
+  const [searchMenu, setSearchMenu] = useState(false);
+
   const navigate = useNavigate();
 
   const handleRegister = async ({ name, email, password }) => {
@@ -114,10 +117,24 @@ function MyContext(props) {
         email: result?.email,
         profilePic: result?.profilePic,
       });
-      toast(result?.meg, {
+      toast(data?.msg);
+    } catch ({ response }) {
+      console.log(response.data);
+      toast.warn(response.data.msg, {
         position: "top-center",
         theme: "colored",
       });
+    }
+  };
+
+  const handelGetFriends = async () => {
+    if (!user._id) return;
+    try {
+      const { data } = await axios.post(
+        "http://localhost:8000/auth/getfriends",
+        { _id: user?._id }
+      );
+      setFriends(data?.friends);
     } catch ({ response }) {
       console.log(response.data);
       toast.warn(response.data.msg, {
@@ -164,6 +181,27 @@ function MyContext(props) {
     }
   };
 
+  const handelAddFriend = async (friendId) => {
+    console.log(user?._id);
+    if (!friendId || !user?._id) return;
+    try {
+      const { data } = await axios.post(
+        "http://localhost:8000/auth/addfriends",
+        {
+          userId: user?._id,
+          friendId,
+        }
+      );
+      handelGetFriends();
+      toast(data?.msg);
+    } catch ({ response }) {
+      console.log(response.data);
+      toast.warn(response.data.msg, {
+        position: "top-center",
+        theme: "colored",
+      });
+    }
+  };
   const handelSendMessage = async (receiverId, message) => {
     try {
       const { data } = await axios.post(
@@ -189,7 +227,9 @@ function MyContext(props) {
     handleGetAllUsers();
   }, []);
   useEffect(() => {
+    handelGetFriends();
     handleGetAllUsers();
+    handelGetMessages();
   }, [user]);
   return (
     <Context.Provider
@@ -199,7 +239,11 @@ function MyContext(props) {
         allUsers,
         setAllUsers,
         proImg,
+        searchMenu,
+        setSearchMenu,
         messages,
+        friends,
+        setFriends,
         setMessages,
         setProImg,
         handleRegister,
@@ -209,6 +253,7 @@ function MyContext(props) {
         handleGetAllUsers,
         handelGetMessages,
         handelSendMessage,
+        handelAddFriend,
       }}
     >
       {props.children}

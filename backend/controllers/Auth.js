@@ -53,7 +53,6 @@ async function handelUserRegistration(req, res) {
 
 async function handelUserLogin(req, res) {
   const { email, password } = req.body;
-  console.log(email, password);
   if (!email || !password) {
     return res.status(403).json({ msg: "all details are required" });
   }
@@ -88,7 +87,6 @@ async function handelJwtTokenBasedLogin(req, res) {
   try {
     if (access_Token) {
       const result = await jwt.verify(access_Token, process.env.JWT_SECRETE);
-      console.log(result);
       if (result) {
         const user = await User.findById(result._doc._id);
         return res
@@ -139,10 +137,91 @@ async function handelUserUpdate(req, res) {
   }
 }
 
+async function handelAddFriend(req, res) {
+  const { userId, friendId } = req.body;
+
+  if (!userId || !friendId) {
+    return res.status(403).json({ msg: "userId undefine" });
+  }
+
+  if (
+    !mongoose.isValidObjectId(userId) ||
+    !mongoose.isValidObjectId(friendId)
+  ) {
+    return res.status(403).json({ msg: "invalid userId" });
+  }
+
+  try {
+    const friend = await User.findById(friendId);
+    const user = await User.findById(userId);
+
+    if (!friend || !user) {
+      return res.status(404).json({ msg: "user not found" });
+    }
+
+    const checkIsAlreadyAdded = user.friends.filter((fri) => fri == friendId);
+    if (checkIsAlreadyAdded.length > 0) {
+      return res.status(404).json({ msg: "user already added" });
+    }
+
+    const result = await User.findByIdAndUpdate(userId, {
+      $push: { friends: friendId },
+    });
+
+    await User.findByIdAndUpdate(friendId, {
+      $push: { friends: userId },
+    });
+
+    return res
+      .status(200)
+      .json({ msg: "user added successfully", result, friendId });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ msg: "internal server error", error: error.message });
+  }
+}
+
+async function handelGetFriends(req, res) {
+  const { _id } = req.body;
+  if (!_id) {
+    return res.status(403).json({ msg: "userId undefined" });
+  }
+
+  try {
+    const user = await User.findById(_id).populate({
+      path: "friends",
+      model: "user", // Assuming your user model is named "User"
+      select: "_id name about profilePic",
+    });
+
+    if (!user) {
+      return res.status(404).json({ msg: "User not found" });
+    }
+
+    const friends = user.friends.map((friend) => ({
+      _id: friend._id,
+      name: friend.name,
+      about: friend.about,
+      profilePic: friend.profilePic,
+    }));
+
+    return res
+      .status(200)
+      .json({ msg: "Friends fetched successfully", friends });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ msg: "Internal server error", error: error.message });
+  }
+}
+
 module.exports = {
   handelGetAllUsers,
   handelUserRegistration,
   handelUserLogin,
   handelUserUpdate,
   handelJwtTokenBasedLogin,
+  handelAddFriend,
+  handelGetFriends,
 };

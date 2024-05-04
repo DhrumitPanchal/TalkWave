@@ -3,8 +3,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const authRoute = require("./routes/AuthRoutes");
 const messageRoute = require("./routes/MessageRoutes");
-
-const app = express();
+const { app, server } = require("./socket/Socket");
 require("dotenv").config();
 app.use(express.json());
 app.use(cors());
@@ -17,7 +16,7 @@ app.get("/", (req, res) => {
 });
 
 try {
-  app.listen(process.envPORT || 8000, () =>
+  server.listen(process.envPORT || 8000, () =>
     console.log("server is running...")
   );
   mongoose

@@ -1,6 +1,7 @@
 const Conversation = require("../models/conversation");
 const Message = require("../models/messageModel");
 var mongoose = require("mongoose");
+const { getReceiverSocketId , io} = require("../socket/Socket");
 async function handelSendMessage(req, res) {
   const { senderId, message } = req.body;
   const { receiverId } = req.params;
@@ -37,6 +38,12 @@ async function handelSendMessage(req, res) {
       conversation.messages.push(newMessage?._id);
     }
     await Promise.all([conversation.save(), newMessage.save()]);
+
+    const receiverSocketId = getReceiverSocketId(receiverId);
+
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("newMsg", newMessage);
+    }
 
     return res.status(201).json({ msg: "message sent", newMessage });
   } catch (error) {

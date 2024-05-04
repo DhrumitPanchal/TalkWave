@@ -63,13 +63,9 @@ function Profile() {
           </div>
 
           <div className="flex gap-[2.2rem] h-fit w-fit">
-            <div className="relative  shadow-[6px_7px_14px_3px_rgba(0,0,0,0.2)] flex justify-center  h-[7rem] w-[7rem] rounded-full bg-red-300">
+            <div className="relative  shadow-[6px_7px_14px_3px_rgba(0,0,0,0.2)] flex justify-center  h-[7rem] w-[7rem] rounded-full   ">
               <div className="absolute bottom-[1rem] -right-[.3rem] h-[1.6rem] w-[1.6rem] bg-blue-500 rounded-full" />
-              <img
-                className="w-full h-full rounded-full"
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsNWPhXbh68-pBV7iNSR76TAgOVQRSqkuogA&s"
-                alt=""
-              />
+              <img className="w-full h-full rounded-full" src="" alt="" />
             </div>
             <div className="flex flex-col justify-center h-full">
               <h2 className="text-[1.4rem] font-semibold">{user?.name}</h2>
@@ -90,6 +86,7 @@ function Profile() {
                 />
               ) : (
                 <input
+                  onClick={() => setProEditable(true)}
                   required
                   onChange={(e) => handelInput(e)}
                   name="name"

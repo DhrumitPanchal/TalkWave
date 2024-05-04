@@ -1,9 +1,11 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { Context } from "../Context/Context";
 // import { useParams } from "react-router-dom";
+import MsgListener from "../Component/MsgListener";
 
 function Message() {
   const { messages, user } = useContext(Context);
+  MsgListener();
   const lastMessageRef = useRef();
   const [title, setTitle] = useState({
     Today: true,
@@ -88,13 +90,13 @@ function Message() {
       ) : (
         messages.map((msg) => (
           <>
-            {formatMsgTimeStamp(msg?.createdAt)[0] && (
+            {/* {formatMsgTimeStamp(msg?.createdAt)[0] && (
               <div className="mb-[2rem]  flex justify-center w-full ">
                 <div className=" px-[1rem] py-[.2rem] rounded-[.4rem] bg-blue-500/50  ">
                   {formatMsgTimeStamp(msg?.createdAt)[1]}
                 </div>
               </div>
-            )}
+            )} */}
 
             <div
               key={msg?._id}

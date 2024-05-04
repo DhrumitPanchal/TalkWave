@@ -13,7 +13,7 @@ import {
 
 function Chat() {
   const navigate = useNavigate();
-  const { allUsers, handelGetMessages, handelSendMessage } =
+  const { user, allUsers, handelGetMessages, handelSendMessage } =
     useContext(Context);
   const { id } = useParams();
   const [receiver, setReceiver] = useState(null);
@@ -33,11 +33,16 @@ function Chat() {
   return (
     <>
       {!id ? (
-        <div className="chatBox flex justify-center items-center h-screen w-[76%] max-sm:w-full">
-          <h2 className="text-[2.6rem] font-bold text-blue-500">Talk Wave</h2>
+        <div className="chatBox flex flex-col gap-[.2rem] justify-center items-center h-screen w-[76%]">
+          <h2 className="text-[2rem] font-bold text-blue-500">
+            Welcome 👋 {user?.name}
+          </h2>
+          <h2 className="text-[1.2rem] font-semibold text-black/90">
+            Select chat to start messaging
+          </h2>
         </div>
       ) : (
-        <div className="chatBox h-screen w-[76%] max-sm:w-full">
+        <div className="chatBox h-screen w-[76%] max-sm:hidden">
           <div className="h-[11%] flex justify-between items-center px-[2rem] max-sm:px-[1rem] max-sm:h-[8%] bg-white ">
             <div className="flex items-center justify-between gap-[3rem] max-sm:gap-[1rem]">
               <div
@@ -46,17 +51,19 @@ function Chat() {
               >
                 <FaArrowLeft className="text-[1.4rem] text-white" />
               </div>
-              <div className="flex items-center gap-[1.4rem]">
+              <div className="flex items-center h-full gap-[1.4rem]">
                 <img
                   className="h-[3.5rem] w-[3.5rem] rounded-full border-[.2rem] border-blue-700"
                   src=" "
                   alt=""
                 />
-                <div>
-                  <h1 className="text-[1.2rem] font-semibold">
+                <div className="h-full w-fit ">
+                  <div className=" text-[1.2rem] font-semibold">
                     {receiver?.name}
-                  </h1>
-                  <p>{receiver?.about}</p>
+                  </div>
+                  <div className=" max-w-fit min-w-[1rem]">
+                    {receiver?.about ? receiver?.about : receiver?.email}
+                  </div>
                 </div>
               </div>
             </div>
