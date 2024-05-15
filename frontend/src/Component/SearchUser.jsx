@@ -72,7 +72,7 @@ function SearchUser() {
 
                     <img
                       className="h-[3.6rem] w-[3.6rem] rounded-full bg-white border-[1px] border-blue-700"
-                      src=""
+                      src={user?.profilePic}
                       alt=""
                     />
                   </div>

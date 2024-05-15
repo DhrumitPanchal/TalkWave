@@ -12,7 +12,7 @@ function MyContext(props) {
     email: "",
     profilePic: "",
   });
-  const [proImg, setProImg] = useState(null);
+  const formData = new FormData();
   const [friends, setFriends] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
   const [messages, setMessages] = useState([]);
@@ -148,22 +148,30 @@ function MyContext(props) {
     }
   };
 
-  // const handelGetNotifications = async () => {
-  //   if (!user._id) return;
-  //   try {
-  //     const { data } = await axios.post(
-  //       "http://localhost:8000/auth/getfriends",
-  //       { _id: user?._id }
-  //     );
-  //     setFriends(data?.friends);
-  //   } catch ({ response }) {
-  //     console.log(response.data);
-  //     toast.warn(response.data.msg, {
-  //       position: "top-center",
-  //       theme: "colored",
-  //     });
-  //   }
-  // };
+  const handelUploadProfileImage = async () => {
+    console.log(formData);
+    try {
+      const response = await axios.post(
+        `http://localhost:8000/auth/upload`,
+        formData
+      );
+      console.log("check img url : " + response?.data?.ProfilePicUrl);
+
+      await axios.put(`http://localhost:8000/auth/update`, {
+        id: user?._id,
+        data: {
+          profilePic: response?.data?.ProfilePicUrl,
+        },
+      });
+      setUser({ ...user, profilePic: response?.data?.ProfilePicUrl });
+    } catch ({ response }) {
+      console.log(response.data);
+      toast.warn(response.data.msg, {
+        position: "top-center",
+        theme: "colored",
+      });
+    }
+  };
 
   const handleGetAllUsers = async () => {
     try {
@@ -278,16 +286,15 @@ function MyContext(props) {
         setUser,
         allUsers,
         setAllUsers,
-        proImg,
         searchMenu,
         setSearchMenu,
         messages,
         friends,
         notifications,
+        formData,
         setNotifications,
         setFriends,
         setMessages,
-        setProImg,
         handleRegister,
         handleLogin,
         handelJwtLogin,
@@ -297,6 +304,7 @@ function MyContext(props) {
         handelSendMessage,
         handelAddFriend,
         handelSendFriendRequest,
+        handelUploadProfileImage,
       }}
     >
       {props.children}

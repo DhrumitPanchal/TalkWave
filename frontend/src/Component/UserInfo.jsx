@@ -1,10 +1,17 @@
 import { useContext, useState } from "react";
+import { FaPencilAlt } from "react-icons/fa";
 
 import { Context } from "../Context/Context";
 
 function UserInfo() {
   const [proEditable, setProEditable] = useState(false);
-  const { user, setUser, updateUserDetails } = useContext(Context);
+  const {
+    user,
+    setUser,
+    updateUserDetails,
+    formData,
+    handelUploadProfileImage,
+  } = useContext(Context);
 
   const handelInput = (event) => {
     if (proEditable) {
@@ -12,6 +19,12 @@ function UserInfo() {
       const value = event.target.value;
       setUser({ ...user, [name]: value });
     }
+  };
+
+  const heandalFileInput = (e) => {
+    const file = e.target.files[0];
+    formData.append("profilePic", file);
+    handelUploadProfileImage();
   };
   return (
     <div className="relative py-[5rem] px-[6rem] flex flex-col gap-[4rem] h-[calc(100vh-4rem)]  w-full ">
@@ -34,9 +47,25 @@ function UserInfo() {
       </div>
 
       <div className="flex gap-[2.2rem] h-fit w-fit">
-        <div className="relative  shadow-[6px_7px_14px_3px_rgba(0,0,0,0.2)] flex justify-center  h-[7rem] w-[7rem] rounded-full   ">
-          <div className="absolute bottom-[1rem] -right-[.3rem] h-[1.6rem] w-[1.6rem] bg-blue-500 rounded-full" />
-          <img className="w-full h-full rounded-full" src="" alt="" />
+        <div className="relative flex justify-center ">
+          <label
+            htmlFor="picture"
+            className="absolute  flex justify-center items-center bottom-[1rem] -right-[.3rem] h-[1.8rem] w-[1.8rem] bg-blue-500 rounded-full"
+          >
+            <FaPencilAlt className="text-white" />
+            <input
+              id="picture"
+              onChange={(e) => heandalFileInput(e)}
+              name="picture"
+              type="file"
+              className="hidden"
+            />
+          </label>
+          <img
+            className=" h-[7rem] shadow-[6px_7px_14px_3px_rgba(0,0,0,0.2)]  w-[7rem] rounded-full  "
+            src={user?.profilePic}
+            alt=""
+          />
         </div>
         <div className="flex flex-col justify-center h-full">
           <h2 className="text-[1.4rem] font-semibold">{user?.name}</h2>

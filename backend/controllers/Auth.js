@@ -3,7 +3,7 @@ const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { default: mongoose } = require("mongoose");
 const { getReceiverSocketId, io } = require("../socket/Socket");
-
+const { handleUpload } = require("../cloudinary");
 async function handelGetAllUsers(req, res) {
   try {
     const users = await User.find();
@@ -304,6 +304,18 @@ async function getNotifications(req, res) {
   }
 }
 
+async function handelUpload(req, res) {
+  try {
+    const b64 = Buffer.from(req?.file?.buffer).toString("base64");
+    let dataURI = "data:" + req?.file?.mimetype + ";base64," + b64;
+    const cldRes = await handleUpload(dataURI);
+    res.status(200).json({ ProfilePicUrl: cldRes.url });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ error: error.message, msg: "Internal server error" });
+  }
+}
 module.exports = {
   handelGetAllUsers,
   handelUserRegistration,
@@ -314,4 +326,5 @@ module.exports = {
   handelGetFriends,
   handelSendRequest,
   getNotifications,
+  handelUpload,
 };

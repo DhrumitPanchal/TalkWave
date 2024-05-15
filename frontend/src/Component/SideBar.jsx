@@ -8,7 +8,7 @@ import SearchUser from "./SearchUser";
 
 function SideBar() {
   const navigate = useNavigate();
-  const { friends, searchMenu, setSearchMenu } = useContext(Context);
+  const { friends, searchMenu, setSearchMenu, user } = useContext(Context);
   const { onlineUsers } = useContext(Socket);
   const isOnline = (id) => {
     return onlineUsers.includes(id);
@@ -32,7 +32,7 @@ function SideBar() {
           <img
             onClick={() => navigate("/profile/userinfo")}
             className="cursor-pointer h-[3.6rem] w-[3.6rem] rounded-full bg-white border-[.2rem] border-blue-700"
-            src={"./images/Mobile login-bro.svg"}
+            src={user?.profilePic}
             alt=""
           />
         </div>
@@ -52,7 +52,7 @@ function SideBar() {
 
                   <img
                     className="h-[3.6rem] w-[3.6rem] rounded-full bg-white border-[1px] border-blue-700"
-                    src=""
+                    src={user?.profilePic}
                     alt=""
                   />
                 </div>
