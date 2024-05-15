@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { Context } from "../Context/Context";
 import { Socket } from "../Context/SocketContext";
-import { FaPlus, FaUserPlus } from "react-icons/fa";
+import { FaPlus } from "react-icons/fa";
 // import { RxExit } from "react-icons/rx";
 import SearchUser from "./SearchUser";
 
@@ -30,7 +30,7 @@ function SideBar() {
           </h1>
 
           <img
-            onClick={() => navigate("/profile")}
+            onClick={() => navigate("/profile/userinfo")}
             className="cursor-pointer h-[3.6rem] w-[3.6rem] rounded-full bg-white border-[.2rem] border-blue-700"
             src={"./images/Mobile login-bro.svg"}
             alt=""

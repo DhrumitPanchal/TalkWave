@@ -1,8 +1,4 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import Cookies from "js-cookie";
-import { toast } from "react-toastify";
 import { Context } from "./Context";
 import io from "socket.io-client";
 
@@ -11,7 +7,7 @@ export const Socket = createContext(null);
 function MySocket(props) {
   const [socket, setSocket] = useState(null);
   const [onlineUsers, setOnlineUsers] = useState([]);
-  const { user, messages, setMessages } = useContext(Context);
+  const { user } = useContext(Context);
 
   useEffect(() => {
     if (user) {

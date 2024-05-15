@@ -2,6 +2,7 @@ const Conversation = require("../models/conversation");
 const Message = require("../models/messageModel");
 var mongoose = require("mongoose");
 const { getReceiverSocketId , io} = require("../socket/Socket");
+
 async function handelSendMessage(req, res) {
   const { senderId, message } = req.body;
   const { receiverId } = req.params;

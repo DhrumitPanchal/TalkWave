@@ -1,6 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { Context } from "../Context/Context";
-// import { useParams } from "react-router-dom";
 import MsgListener from "../Component/MsgListener";
 
 function Message() {
@@ -27,7 +26,7 @@ function Message() {
       title.Today && setTitle({ ...title, Today: false });
       return data;
     } else if (now - messageDate < 2 * 24 * 60 * 60 * 1000) {
-      return [true, "Yesterday"];
+      return "Yesterday";
     } else if (now - messageDate < 7 * 24 * 60 * 60 * 1000) {
       const days = [
         "Sunday",
@@ -39,28 +38,18 @@ function Message() {
         "Saturday",
       ];
 
-      return [true, days[messageDate.getDay()]];
+      return days[messageDate.getDay()];
     } else if (now.getFullYear - messageDate.getFullYear() > 0) {
-      return [
-        true,
-        messageDate.toLocaleDateString([], {
-          year: "numeric",
-          month: "short",
-          day: "numeric",
-        }),
-      ];
+      return messageDate.toLocaleDateString([], {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      });
     } else {
-      return [
-        true,
-        messageDate.toLocaleDateString([], {
-          month: "short",
-          day: "numeric",
-        }),
-        messageDate.toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-      ];
+      return messageDate.toLocaleDateString([], {
+        month: "short",
+        day: "numeric",
+      });
     }
   }
 
@@ -90,18 +79,10 @@ function Message() {
       ) : (
         messages.map((msg) => (
           <>
-            {/* {formatMsgTimeStamp(msg?.createdAt)[0] && (
-              <div className="mb-[2rem]  flex justify-center w-full ">
-                <div className=" px-[1rem] py-[.2rem] rounded-[.4rem] bg-blue-500/50  ">
-                  {formatMsgTimeStamp(msg?.createdAt)[1]}
-                </div>
-              </div>
-            )} */}
-
             <div
               key={msg?._id}
               ref={lastMessageRef}
-              className={`relative overflow-y-hidden max-w-[40rem] max-sm:max-w-[22rem] ${
+              className={`group relative  max-w-[40rem] max-sm:max-w-[22rem] ${
                 msg.senderId === user._id && "ml-auto"
               } text-[1.2rem] pl-[1.2rem] pr-[4.2rem] max-sm:pt-[.3rem] pt-[.3rem] pb-[.4rem] text-white  rounded-[1rem] ${
                 msg.senderId === user._id
@@ -109,6 +90,13 @@ function Message() {
                   : "rounded-tl-[0rem]"
               } w-fit bg-blue-500 mb-[1rem]`}
             >
+              <div
+                className={`group-hover:flex hidden absolute z-20 after:absolute  justify-center after:h-[.3rem] after:w-[.3rem] after:z-10 after:bg-blue-400  after:-bottom-[.1rem] after:rotate-[45deg]  px-[1.2rem] ${
+                  msg?.senderId !== user?._id ? "left-0" : "right-0"
+                } rounded-[.2rem] items-center -top-[1.9rem] font-semibold h-[1.6rem] w-fit text-[.9rem] bg-blue-400`}
+              >
+                {formatMsgTimeStamp(msg?.createdAt)}
+              </div>
               <div
                 className={`w-full ${msg.senderId === user._id && "ml-auto"}`}
               >

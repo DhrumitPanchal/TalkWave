@@ -24,6 +24,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    notification: [
+      {
+        type: Object,
+      },
+    ],
     friends: [
       {
         type: mongoose.Schema.Types.ObjectId,

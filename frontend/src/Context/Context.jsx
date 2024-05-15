@@ -17,7 +17,7 @@ function MyContext(props) {
   const [allUsers, setAllUsers] = useState([]);
   const [messages, setMessages] = useState([]);
   const [searchMenu, setSearchMenu] = useState(false);
-
+  const [notifications, setNotifications] = useState([]);
   const navigate = useNavigate();
 
   const handleRegister = async ({ name, email, password }) => {
@@ -35,6 +35,7 @@ function MyContext(props) {
         email: result?.email,
         profilePic: result?.profilePic,
       });
+      setNotifications(result?.notification);
       navigate("/");
       toast(data.msg);
     } catch ({ response }) {
@@ -60,6 +61,7 @@ function MyContext(props) {
         email: result?.email,
         profilePic: result?.profilePic,
       });
+      setNotifications(result?.notification);
       Cookies.set("accessToken", data.access_Token, { expires: 365 });
       navigate("/");
       toast("sign in successfully");
@@ -85,6 +87,8 @@ function MyContext(props) {
           email: result?.email,
           profilePic: result?.profilePic,
         });
+        setNotifications(result?.notification);
+
         navigate("/");
       } else {
         navigate("/login");
@@ -143,6 +147,23 @@ function MyContext(props) {
       });
     }
   };
+
+  // const handelGetNotifications = async () => {
+  //   if (!user._id) return;
+  //   try {
+  //     const { data } = await axios.post(
+  //       "http://localhost:8000/auth/getfriends",
+  //       { _id: user?._id }
+  //     );
+  //     setFriends(data?.friends);
+  //   } catch ({ response }) {
+  //     console.log(response.data);
+  //     toast.warn(response.data.msg, {
+  //       position: "top-center",
+  //       theme: "colored",
+  //     });
+  //   }
+  // };
 
   const handleGetAllUsers = async () => {
     try {
@@ -222,6 +243,25 @@ function MyContext(props) {
     }
   };
 
+  const handelSendFriendRequest = async (friendId) => {
+    try {
+      const { data } = await axios.post(
+        `http://localhost:8000/auth/sendfriendrequest`,
+        {
+          userId: user._id,
+          friendId,
+        }
+      );
+      toast(data?.msg);
+    } catch ({ response }) {
+      console.log(response.data);
+      toast.warn(response.data.msg, {
+        position: "top-center",
+        theme: "colored",
+      });
+    }
+  };
+
   useEffect(() => {
     handelJwtLogin();
     handleGetAllUsers();
@@ -243,6 +283,8 @@ function MyContext(props) {
         setSearchMenu,
         messages,
         friends,
+        notifications,
+        setNotifications,
         setFriends,
         setMessages,
         setProImg,
@@ -254,6 +296,7 @@ function MyContext(props) {
         handelGetMessages,
         handelSendMessage,
         handelAddFriend,
+        handelSendFriendRequest,
       }}
     >
       {props.children}

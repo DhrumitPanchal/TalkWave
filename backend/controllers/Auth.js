@@ -2,6 +2,7 @@ const User = require("../models/userModel");
 const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { default: mongoose } = require("mongoose");
+const { getReceiverSocketId, io } = require("../socket/Socket");
 
 async function handelGetAllUsers(req, res) {
   try {
@@ -139,6 +140,7 @@ async function handelUserUpdate(req, res) {
 
 async function handelAddFriend(req, res) {
   const { userId, friendId } = req.body;
+  console.log("check data : " + userId + " - " + friendId);
 
   if (!userId || !friendId) {
     return res.status(403).json({ msg: "userId undefine" });
@@ -170,6 +172,16 @@ async function handelAddFriend(req, res) {
 
     await User.findByIdAndUpdate(friendId, {
       $push: { friends: userId },
+    });
+
+    const receiverSocketId = getReceiverSocketId(friendId);
+    console.log("add friend id : " + receiverSocketId);
+
+    io.to(receiverSocketId).emit("requestaccepted", {
+      _id: user?._id,
+      name: user?.name,
+      about: user?.about,
+      profilePic: user?.profilePic,
     });
 
     return res
@@ -216,6 +228,82 @@ async function handelGetFriends(req, res) {
   }
 }
 
+async function handelSendRequest(req, res) {
+  const { userId, friendId } = req.body;
+
+  if (!userId || !friendId) {
+    return res.status(403).json({ msg: "userId undefine" });
+  }
+
+  if (
+    !mongoose.isValidObjectId(userId) ||
+    !mongoose.isValidObjectId(friendId)
+  ) {
+    return res.status(403).json({ msg: "invalid userId" });
+  }
+
+  try {
+    const user = await User.findById(userId);
+    const friend = await User.findById(friendId);
+
+    if (!friend || !user) {
+      return res.status(404).json({ msg: "user not found" });
+    }
+
+    const getRequests = await friend?.notification.filter(
+      (msg) => msg?.type === "request"
+    );
+
+    const checkIfAlreadyRequested = getRequests?.filter(
+      (msg) => msg?.requester?._id == userId
+    );
+    if (checkIfAlreadyRequested.length > 0) {
+      return res.status(404).json({ msg: "already requested" });
+    }
+
+    const sendRequest = await User.findByIdAndUpdate(friendId, {
+      $push: {
+        notification: { type: "request", requester: user, status: "pending" },
+      },
+    });
+    const receiverSocketId = getReceiverSocketId(friendId);
+    io.to(receiverSocketId).emit("newNotification", {
+      type: "request",
+      requester: user,
+      status: "pending",
+    });
+    return res.status(200).json({ msg: "request send", sendRequest });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ msg: "Internal server error", error: error.message });
+  }
+}
+
+async function getNotifications(req, res) {
+  const { userId } = req.body;
+
+  if (!userId) {
+    return res.status(403).json({ msg: "userId undefine" });
+  }
+
+  if (!mongoose.isValidObjectId(userId)) {
+    return res.status(403).json({ msg: "invalid userId" });
+  }
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ msg: "user not found" });
+    }
+
+    res.status(200).json({ notifications: user?.notification });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ msg: "Internal server error", error: error.message });
+  }
+}
+
 module.exports = {
   handelGetAllUsers,
   handelUserRegistration,
@@ -224,4 +312,6 @@ module.exports = {
   handelJwtTokenBasedLogin,
   handelAddFriend,
   handelGetFriends,
+  handelSendRequest,
+  getNotifications,
 };

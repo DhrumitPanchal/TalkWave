@@ -76,7 +76,7 @@ function Chat() {
           </div>
 
           <div className="relative h-[89%] w-full max-sm:h-[92%]">
-            <div className="overflow-y-scroll p-[2rem] max-sm:p-[1rem]  max-sm:h-[92.5%] h-[88.6%]  w-full ">
+            <div className="overflow-y-scroll p-[2rem] pt-[2.4rem] max-sm:p-[1rem]  max-sm:h-[92.5%] h-[88.6%]  w-full ">
               <Message />
             </div>
 

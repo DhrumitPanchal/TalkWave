@@ -1,15 +1,13 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Context } from "../Context/Context";
-import { useNavigate } from "react-router-dom";
 import { Socket } from "../Context/SocketContext";
 import { FaSistrix, FaUserPlus, FaTimes } from "react-icons/fa";
 function SearchUser() {
-  const { allUsers, searchMenu, setSearchMenu, handelAddFriend } =
+  const { allUsers, setSearchMenu, handelSendFriendRequest } =
     useContext(Context);
   const [users, setUsers] = useState(allUsers);
   const { onlineUsers } = useContext(Socket);
   const [search, setSearch] = useState("");
-  const navigate = useNavigate();
 
   const isOnline = (id) => {
     return onlineUsers.includes(id);
@@ -19,6 +17,7 @@ function SearchUser() {
     if (search === "") {
       return setUsers(allUsers);
     }
+
     const lowerSearch = search.toLowerCase();
     const result = await allUsers.filter((e) => {
       if (
@@ -88,7 +87,7 @@ function SearchUser() {
                   </div>
                 </div>
                 <div
-                  onClick={() => handelAddFriend(user?._id)}
+                  onClick={() => handelSendFriendRequest(user?._id)}
                   className="cursor-pointer h-full p-[.6rem]  w-fit"
                 >
                   <FaUserPlus className="text-[2rem]  transition-colors duration-200 text-blue-300 hover:text-blue-500" />

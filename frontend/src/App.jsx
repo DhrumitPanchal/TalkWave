@@ -6,7 +6,6 @@ import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import MyContext from "./Context/Context";
 import MySocket from "./Context/SocketContext";
-import Settings from "./Component/Settings";
 function App() {
   return (
     <BrowserRouter>
@@ -18,8 +17,9 @@ function App() {
               <Route path="" element={<Home />} />
               <Route path=":id" element={<Home />} />
               <Route path="login" element={<Login />} />
-              <Route path="profile" element={<Profile />} />
-              <Route path="setting" element={<Settings />} />
+              <Route path="profile/userinfo" element={<Profile />} />
+              <Route path="profile/setting" element={<Profile />} />
+              <Route path="profile/notification" element={<Profile />} />
             </Route>
           </Routes>
         </MySocket>
