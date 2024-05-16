@@ -9,7 +9,7 @@ function Login() {
     email: "",
     password: "",
   });
-  const { handleLogin } = useContext(Context);
+  const { handleLogin, handleRegister } = useContext(Context);
 
   const handleInput = (e) => {
     const name = e.target.name;
