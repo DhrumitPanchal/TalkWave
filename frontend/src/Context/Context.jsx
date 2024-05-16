@@ -3,7 +3,11 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
+
 export const Context = createContext(null);
+const baseUrl = import.meta.env.VITE_API_BACKENDURL;
+
+console.log("check env : " + baseUrl);
 function MyContext(props) {
   const [user, setUser] = useState({
     _id: "",
@@ -22,7 +26,7 @@ function MyContext(props) {
 
   const handleRegister = async ({ name, email, password }) => {
     try {
-      const { data } = await axios.post("http://localhost:8000/auth/register", {
+      const { data } = await axios.post(`${baseUrl}/auth/register`, {
         name,
         email,
         password,
@@ -49,7 +53,7 @@ function MyContext(props) {
 
   const handleLogin = async (email, password) => {
     try {
-      const { data } = await axios.post(`http://localhost:8000/auth/login`, {
+      const { data } = await axios.post(`${baseUrl}/auth/login`, {
         email,
         password,
       });
@@ -76,7 +80,7 @@ function MyContext(props) {
 
     try {
       if (token) {
-        const { data } = await axios.post(`http://localhost:8000/auth/jwt`, {
+        const { data } = await axios.post(`${baseUrl}/auth/jwt`, {
           access_Token: token,
         });
         const result = data.user;
@@ -104,7 +108,7 @@ function MyContext(props) {
 
   const updateUserDetails = async () => {
     try {
-      const { data } = await axios.put(`http://localhost:8000/auth/update`, {
+      const { data } = await axios.put(`${baseUrl}/auth/update`, {
         id: user?._id,
         data: {
           name: user?.name,
@@ -134,10 +138,9 @@ function MyContext(props) {
   const handelGetFriends = async () => {
     if (!user._id) return;
     try {
-      const { data } = await axios.post(
-        "http://localhost:8000/auth/getfriends",
-        { _id: user?._id }
-      );
+      const { data } = await axios.post(`${baseUrl}/auth/getfriends`, {
+        _id: user?._id,
+      });
       setFriends(data?.friends);
     } catch ({ response }) {
       console.log(response.data);
@@ -151,13 +154,10 @@ function MyContext(props) {
   const handelUploadProfileImage = async () => {
     console.log(formData);
     try {
-      const response = await axios.post(
-        `http://localhost:8000/auth/upload`,
-        formData
-      );
+      const response = await axios.post(`${baseUrl}/auth/upload`, formData);
       console.log("check img url : " + response?.data?.ProfilePicUrl);
 
-      await axios.put(`http://localhost:8000/auth/update`, {
+      await axios.put(`${baseUrl}/auth/update`, {
         id: user?._id,
         data: {
           profilePic: response?.data?.ProfilePicUrl,
@@ -175,7 +175,7 @@ function MyContext(props) {
 
   const handleGetAllUsers = async () => {
     try {
-      const { data } = await axios.get("http://localhost:8000/auth/users");
+      const { data } = await axios.get(`${baseUrl}/auth/users`);
       const filterUser = data?.users.filter(
         (current) => current._id !== user._id
       );
@@ -193,7 +193,7 @@ function MyContext(props) {
     if (!receiverId || !user?._id) return;
     try {
       const { data } = await axios.post(
-        `http://localhost:8000/message/get/${receiverId}`,
+        `${baseUrl}/message/get/${receiverId}`,
         {
           senderId: user._id,
           receiverId,
@@ -214,13 +214,10 @@ function MyContext(props) {
     console.log(user?._id);
     if (!friendId || !user?._id) return;
     try {
-      const { data } = await axios.post(
-        "http://localhost:8000/auth/addfriends",
-        {
-          userId: user?._id,
-          friendId,
-        }
-      );
+      const { data } = await axios.post(`${baseUrl}/auth/addfriends`, {
+        userId: user?._id,
+        friendId,
+      });
       handelGetFriends();
       toast(data?.msg);
     } catch ({ response }) {
@@ -234,7 +231,7 @@ function MyContext(props) {
   const handelSendMessage = async (receiverId, message) => {
     try {
       const { data } = await axios.post(
-        `http://localhost:8000/message/send/${receiverId}`,
+        `${baseUrl}/message/send/${receiverId}`,
         {
           senderId: user._id,
           message,
@@ -253,13 +250,10 @@ function MyContext(props) {
 
   const handelSendFriendRequest = async (friendId) => {
     try {
-      const { data } = await axios.post(
-        `http://localhost:8000/auth/sendfriendrequest`,
-        {
-          userId: user._id,
-          friendId,
-        }
-      );
+      const { data } = await axios.post(`${baseUrl}/auth/sendfriendrequest`, {
+        userId: user._id,
+        friendId,
+      });
       toast(data?.msg);
     } catch ({ response }) {
       console.log(response.data);
