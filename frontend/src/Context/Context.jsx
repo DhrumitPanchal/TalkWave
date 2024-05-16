@@ -7,7 +7,6 @@ import { toast } from "react-toastify";
 export const Context = createContext(null);
 const baseUrl = import.meta.env.VITE_API_BACKENDURL;
 
-console.log("check env : " + baseUrl);
 function MyContext(props) {
   const [user, setUser] = useState({
     _id: "",
