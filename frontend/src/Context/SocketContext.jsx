@@ -8,10 +8,11 @@ function MySocket(props) {
   const [socket, setSocket] = useState(null);
   const [onlineUsers, setOnlineUsers] = useState([]);
   const { user } = useContext(Context);
+  const baseUrl = import.meta.env.VITE_API_BACKENDURL;
 
   useEffect(() => {
     if (user) {
-      const socket = io("http://localhost:8000", {
+      const socket = io(baseUrl, {
         query: {
           userId: user?._id,
         },
