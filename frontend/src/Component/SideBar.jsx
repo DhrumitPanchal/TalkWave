@@ -59,7 +59,9 @@ function SideBar() {
 
                 <div>
                   <h1 className="text-[1.2rem] font-semibold">{user?.name}</h1>
-                  <p className="text-[1rem]">{user?.about}</p>
+                  <p className="text-[1rem]">
+                    {user.about ? user?.about : user?.email}
+                  </p>
                 </div>
               </div>
             ))}

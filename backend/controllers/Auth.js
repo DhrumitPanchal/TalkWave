@@ -204,7 +204,7 @@ async function handelGetFriends(req, res) {
     const user = await User.findById(_id).populate({
       path: "friends",
       model: "user", // Assuming your user model is named "User"
-      select: "_id name about profilePic",
+      select: "_id name about email profilePic",
     });
 
     if (!user) {
@@ -215,6 +215,7 @@ async function handelGetFriends(req, res) {
       _id: friend._id,
       name: friend.name,
       about: friend.about,
+      email: friend.email,
       profilePic: friend.profilePic,
     }));
 

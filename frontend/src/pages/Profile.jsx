@@ -15,6 +15,7 @@ function Profile() {
     <>
       <div className="w-full h-screen">
         <div className="flex w-full h-fit">
+          
           <div className="py-[2.6rem] flex flex-col items-center justify-between h-screen w-[26rem] border-r-[3.5px] border-blue-500/10 ">
             <div className="flex flex-col gap-[3rem] w-full items-center ">
               <h2 className="text-[1.4rem] font-bold ">User Profile</h2>
