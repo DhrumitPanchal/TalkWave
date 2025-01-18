@@ -52,11 +52,18 @@ function Chat() {
                 <FaArrowLeft className="text-[1.4rem] text-white" />
               </div>
               <div className="flex items-center h-full gap-[1.4rem]">
-                <img
-                  className="h-[3.5rem] w-[3.5rem] rounded-full border-[.2rem] border-blue-700"
-                  src=" "
-                  alt=""
-                />
+                {receiver?.profilePic ? (
+                  <img
+                    className="h-[3.5rem] w-[3.5rem] bg-cover rounded-full border-[.2rem] border-blue-700"
+                    src={receiver?.profilePic}
+                    alt={receiver?.name}
+                  />
+                ) : (
+                  <div className="relative overflow-hidden h-[3.5rem] w-[3.5rem] flex justify-center bg-cover rounded-full border-[.2rem] border-blue-700 bg-gray-300">
+                    <div className="absolute h-6 w-6 top-2 rounded-full bg-white" />
+                    <div className="absolute h-7 w-10 top-9 rounded-full bg-white" />
+                  </div>
+                )}
                 <div className="h-full w-fit ">
                   <div className=" text-[1.2rem] font-semibold">
                     {receiver?.name}

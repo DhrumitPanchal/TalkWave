@@ -6,6 +6,7 @@ const cors = require("cors");
 const authRoute = require("./routes/AuthRoutes");
 const messageRoute = require("./routes/MessageRoutes");
 const { app, server } = require("./socket/Socket");
+
 require("dotenv").config();
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,

@@ -50,11 +50,18 @@ function SideBar() {
                     <div className="absolute bottom-[.4rem] right-0 h-[.8rem] rounded-full  w-[.8rem] bg-blue-500" />
                   )}
 
-                  <img
-                    className="h-[3.6rem] w-[3.6rem] rounded-full bg-white border-[1px] border-blue-700"
-                    src={user?.profilePic}
-                    alt=""
-                  />
+                  {user?.profilePic ? (
+                    <img
+                      className="h-[3.6rem] w-[3.6rem] rounded-full bg-white border-[1px] border-blue-700"
+                      src={user?.profilePic}
+                      alt=""
+                    />
+                  ) : (
+                    <div className="relative overflow-hidden h-[3.5rem] w-[3.5rem] flex justify-center bg-cover rounded-full border-[.2rem] border-blue-700 bg-gray-300">
+                      <div className="absolute h-6 w-6 top-2 rounded-full bg-white" />
+                      <div className="absolute h-7 w-10 top-9 rounded-full bg-white" />
+                    </div>
+                  )}
                 </div>
 
                 <div>

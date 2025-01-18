@@ -1,3 +1,4 @@
+
 import { createContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -51,8 +52,11 @@ function MyContext(props) {
   };
 
   const handleLogin = async (email, password) => {
+
     try {
       const { data } = await axios.post(`${baseUrl}/auth/login`, {
+
+        
         email,
         password,
       });
